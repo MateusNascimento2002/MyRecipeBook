@@ -16,4 +16,12 @@
     <ProjectReference Include="..\MyRecipeBook.Application\MyRecipeBook.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\MateusNascimento\source\repos\MeuLivroDeReceitas\src\Backend\MyRecipeBook.API\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\MateusNascimento\source\repos\MeuLivroDeReceitas\src\Backend\MyRecipeBook.API\.editorconfig" />
+  </ItemGroup>
+
 </Project>
