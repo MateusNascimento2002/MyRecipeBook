@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Configuration;
 using MyRecipeBook.API.Filters;
 using MyRecipeBook.API.Middleware;
 using MyRecipeBook.Application;
@@ -43,7 +42,14 @@ app.Run();
 
 void MigrateDatabase() 
 {
+    if (builder.Configuration.IsUnitTestEnviroment())
+        return;
     var connectionString = builder.Configuration.ConnectionString();
     var serviceProvider = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider;
     DatabaseMigration.Migrate(connectionString, serviceProvider);
+}
+
+public partial class Program
+{
+
 }
