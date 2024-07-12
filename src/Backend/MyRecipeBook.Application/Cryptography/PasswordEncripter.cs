@@ -16,7 +16,7 @@ public class PasswordEncripter
 
         var bytes = Encoding.UTF8.GetBytes(newPassword);
         var hashBytes = SHA512.HashData(bytes);
-        return StringBytes(bytes);
+        return StringBytes(hashBytes);
     }
 
     private static string StringBytes(byte[] bytes)
