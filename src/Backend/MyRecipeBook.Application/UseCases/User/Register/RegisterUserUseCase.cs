@@ -4,41 +4,43 @@ using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.User;
+using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionBase;
 
 namespace MyRecipeBook.Application.UseCases.User.Register;
 
-public class RegisterUserUseCase : IRegisterUserUseCase
+public class RegisterUserUseCase(
+    IUserWriteOnlyRepository userWriteOnlyRepository,
+    IUserReadOnlyRepository userReadOnlyRepository,
+    IMapper mapper,
+    PasswordEncripter passwordEncrypter,
+    IAccessTokenGenerator accessTokenGenerator,
+    IUnitOfWork unitOfWork) : IRegisterUserUseCase
 {
-    private readonly IUserWriteOnlyRepository _writeOnlyRepository;
-    private readonly IUserReadOnlyRepository _readOnlyRepository;
-    private readonly IMapper _mapper;
-    private readonly PasswordEncripter _passwordEncrypter;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public RegisterUserUseCase(
-        IUserWriteOnlyRepository userWriteOnlyRepository,
-        IUserReadOnlyRepository userReadOnlyRepository,
-        IMapper mapper,
-        PasswordEncripter passwordEncrypter,
-        IUnitOfWork unitOfWork)
-    {
-        _writeOnlyRepository = userWriteOnlyRepository;
-        _readOnlyRepository = userReadOnlyRepository;
-        _mapper = mapper;
-        _passwordEncrypter = passwordEncrypter;
-        _unitOfWork = unitOfWork;
-    }
+    private readonly IUserWriteOnlyRepository _writeOnlyRepository = userWriteOnlyRepository;
+    private readonly IUserReadOnlyRepository _readOnlyRepository = userReadOnlyRepository;
+    private readonly IMapper _mapper = mapper;
+    private readonly PasswordEncripter _passwordEncrypter = passwordEncrypter;
+    private readonly IUnitOfWork _unitOfWork = unitOfWork;
+    private readonly IAccessTokenGenerator _accessTokenGenerator = accessTokenGenerator;
 
     public async Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request)
     {
         await Validate(request);
         var user = _mapper.Map<Domain.Entities.User>(request);
         user.Password = _passwordEncrypter.Encrypt(request.Password);
+        user.UserIdentifier = Guid.NewGuid();
         await _writeOnlyRepository.Add(user);
         await _unitOfWork.Commit();
-        return new ResponseRegisteredUserJson(request.Name);
+        return new ResponseRegisteredUserJson()
+        {
+            Name = user.Name,
+            Tokens = new ResponseTokensJson()
+            {
+                AccessToken = _accessTokenGenerator.Generate(user.UserIdentifier)
+            }
+        };
     }
 
     private async Task Validate(RequestRegisterUserJson request)
