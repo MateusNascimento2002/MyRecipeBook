@@ -44,6 +44,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUserReadOnlyRepository, UserRepository>();
         services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
+        services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
     }
     
     private static void AddLoggedUser(IServiceCollection services)
