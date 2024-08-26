@@ -4,9 +4,7 @@ using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using CommonTestUtilities.Tokens;
 using FluentAssertions;
-using MyRecipeBook.Application.Cryptography;
 using MyRecipeBook.Application.UseCases.Login.DoLogin;
-using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionBase;
 
