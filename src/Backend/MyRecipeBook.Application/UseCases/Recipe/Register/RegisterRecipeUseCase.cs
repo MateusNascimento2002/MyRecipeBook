@@ -7,7 +7,7 @@ using MyRecipeBook.Domain.Repositories.Recipe;
 using MyRecipeBook.Domain.Services.LoggedUser;
 using MyRecipeBook.Exceptions.ExceptionBase;
 
-namespace MyRecipeBook.Application.UseCases.Recipe;
+namespace MyRecipeBook.Application.UseCases.Recipe.Register;
 
 public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILoggedUser loggedUser, IUnitOfWork unitOfWork, IMapper mapper) : IRegisterRecipeUseCase
 {
@@ -26,7 +26,7 @@ public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILogge
         recipe.UserId = loggedUser.Id;
 
         var instructions = request.Instructions.OrderBy(i => i.Step).ToList();
-        for (var index = 0; index < instructions.Count; index++) 
+        for (var index = 0; index < instructions.Count; index++)
         {
             instructions.ElementAt(index).Step = index + 1;
         }
