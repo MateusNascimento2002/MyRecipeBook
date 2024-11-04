@@ -2,7 +2,7 @@
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Exceptions;
 
-namespace MyRecipeBook.Application.UseCases.Recipe;
+namespace MyRecipeBook.Application.UseCases.Recipe.Register;
 
 public class RecipeValidator : AbstractValidator<RequestRecipeJson>
 {
@@ -12,7 +12,7 @@ public class RecipeValidator : AbstractValidator<RequestRecipeJson>
         RuleFor(r => r.CookingTime).IsInEnum().WithMessage(ResourceMessagesException.COOKING_TIME_NOT_SUPPORTED);
         RuleFor(r => r.Difficulty).IsInEnum().WithMessage(ResourceMessagesException.DIFFICULTY_LEVEL_NOT_SUPPORTED);
         RuleFor(r => r.Ingredients.Count).GreaterThan(0).WithMessage(ResourceMessagesException.AT_LEAST_ONE_INGREDIENT);
-        RuleFor(r => r.Instructions.Count).GreaterThan(0).WithMessage(ResourceMessagesException.AT_LEAST_ONE_INSTRUCTION); 
+        RuleFor(r => r.Instructions.Count).GreaterThan(0).WithMessage(ResourceMessagesException.AT_LEAST_ONE_INSTRUCTION);
         RuleForEach(r => r.DishTypes).IsInEnum().WithMessage(ResourceMessagesException.DISH_TYPE_NOT_SUPPORTED);
         RuleForEach(r => r.Ingredients).NotEmpty().WithMessage(ResourceMessagesException.INGREDIENT_EMPTY);
         RuleForEach(r => r.Instructions).ChildRules(instruction =>
