@@ -5,8 +5,8 @@ using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Domain.Security.Tokens;
-using MyRecipeBook.Exceptions.ExceptionBase;
 using MyRecipeBook.Exceptions;
+using MyRecipeBook.Exceptions.ExceptionBase;
 
 namespace MyRecipeBook.API.Filters;
 
@@ -26,13 +26,13 @@ public class AuthenticatedUserFilter(IAccessTokenValidator accessTokenValidator,
             var exist = await _repository.ExistActiveUserWithIdentifier(userIdentifier);
 
             if (exist.IsFalse())
-                throw new MyRecipeBookException(ResourceMessagesException.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE);
+                throw new UnauthorizedException(ResourceMessagesException.USER_WITHOUT_PERMISSION_ACCESS_RESOURCE);
         }
-        catch (SecurityTokenExpiredException ex)
+        catch (SecurityTokenExpiredException)
         {
             context.Result = new UnauthorizedObjectResult(new ResponseErrorJson("TokenIsExpired") { TokenIsExpired = true });
         }
-        catch (MyRecipeBookException ex)
+        catch (UnauthorizedException ex)
         {
             context.Result = new UnauthorizedObjectResult(new ResponseErrorJson(ex.Message));
         }
@@ -46,7 +46,7 @@ public class AuthenticatedUserFilter(IAccessTokenValidator accessTokenValidator,
     {
         var authentication = context.HttpContext.Request.Headers.Authorization.ToString();
         if (!authentication.NotEmpty())
-            throw new MyRecipeBookException(ResourceMessagesException.NO_TOKEN);
+            throw new UnauthorizedException(ResourceMessagesException.NO_TOKEN);
 
         return authentication["Bearer ".Length..].Trim();
     }

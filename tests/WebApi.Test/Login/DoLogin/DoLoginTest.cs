@@ -1,12 +1,11 @@
-﻿using MyRecipeBook.Communication.Requests;
-using System.Net.Http.Json;
+﻿using CommonTestUtilities.Requests;
+using FluentAssertions;
+using MyRecipeBook.Communication.Requests;
+using MyRecipeBook.Exceptions;
+using System.Globalization;
 using System.Net;
 using System.Text.Json;
 using WebApi.Test.InlineData;
-using FluentAssertions;
-using CommonTestUtilities.Requests;
-using MyRecipeBook.Exceptions;
-using System.Globalization;
 
 namespace WebApi.Test.Login.DoLogin;
 

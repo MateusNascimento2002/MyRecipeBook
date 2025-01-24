@@ -1,7 +1,6 @@
 ﻿using CommonTestUtilities.Requests;
 using FluentAssertions;
 using MyRecipeBook.Application.UseCases.User.ChangePassword;
-using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Exceptions;
 
 namespace Validators.Test.User.ChangePassword;

@@ -23,7 +23,7 @@ public class GetUserProfileTest : MyRecipeBookClassFixture
     public async Task Success()
     {
         var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
-        
+
         var response = await DoGet(METHOD, token);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);

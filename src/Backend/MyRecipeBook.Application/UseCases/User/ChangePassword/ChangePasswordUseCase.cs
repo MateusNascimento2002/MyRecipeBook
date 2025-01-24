@@ -19,7 +19,7 @@ public class ChangePasswordUseCase(ILoggedUser loggedUser, IUserUpdateOnlyReposi
     public async Task Execute(RequestChangePasswordJson request)
     {
         var loggedUser = await _loggedUser.User();
-        
+
         Validate(request, loggedUser);
 
         var user = await _repository.GetById(loggedUser.Id);
@@ -43,5 +43,5 @@ public class ChangePasswordUseCase(ILoggedUser loggedUser, IUserUpdateOnlyReposi
         if (result.IsValid.IsFalse())
             throw new ErrorOnValidationException(result.Errors.Select(e => e.ErrorMessage).ToList());
     }
-        
+
 }

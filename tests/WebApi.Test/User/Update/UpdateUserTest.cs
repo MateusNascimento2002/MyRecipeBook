@@ -22,7 +22,7 @@ namespace WebApi.Test.User.Update
         public async Task Success()
         {
             var request = RequestUpdateUserJsonBuilder.Build();
-            
+
             var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
             var response = await DoPut(METHOD, request, token);

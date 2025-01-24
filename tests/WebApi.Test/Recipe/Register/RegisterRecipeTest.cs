@@ -13,7 +13,7 @@ namespace WebApi.Test.Recipe.Register
     {
         private readonly string METHOD = "recipe";
         private readonly Guid _userIdentifier;
-        public RegisterRecipeTest(CustomWebApplicationFactory factory) : base(factory) 
+        public RegisterRecipeTest(CustomWebApplicationFactory factory) : base(factory)
         {
             _userIdentifier = factory.GetUserIdentifier();
         }

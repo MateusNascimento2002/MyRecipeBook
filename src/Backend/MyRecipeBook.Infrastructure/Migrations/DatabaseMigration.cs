@@ -2,7 +2,6 @@
 using FluentMigrator.Runner;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data.Common;
 
 namespace MyRecipeBook.Infrastructure.Migrations;
 

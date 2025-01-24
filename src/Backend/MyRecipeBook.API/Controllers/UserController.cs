@@ -40,7 +40,7 @@ public class UserController : MyRecipeBookBaseController
         await usecase.Execute(request);
         return NoContent();
     }
-    
+
     [HttpPut("change-password")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]

@@ -13,7 +13,7 @@ namespace CommonTestUtilities.Entities
                 count = 1;
 
             var recipeId = 1;
-            for(int i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 var fakeRecipe = Build(user);
                 fakeRecipe.Id = recipeId++;

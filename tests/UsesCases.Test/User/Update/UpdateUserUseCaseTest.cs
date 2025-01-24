@@ -1,16 +1,12 @@
-﻿using CommonTestUtilities.Cryptography;
-using CommonTestUtilities.Mapper;
+﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.LoggedUser;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
-using CommonTestUtilities.Tokens;
 using FluentAssertions;
-using MyRecipeBook.Application.UseCases.User.Register;
-using MyRecipeBook.Exceptions.ExceptionBase;
-using MyRecipeBook.Exceptions;
-using CommonTestUtilities.Entities;
-using CommonTestUtilities.LoggedUser;
-using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Application.UseCases.User.Update;
+using MyRecipeBook.Domain.Extensions;
+using MyRecipeBook.Exceptions;
+using MyRecipeBook.Exceptions.ExceptionBase;
 
 namespace UsesCases.Test.User.Update
 {
@@ -47,7 +43,7 @@ namespace UsesCases.Test.User.Update
             Func<Task> act = async () => { await useCase.Execute(request); };
 
             (await act.Should().ThrowAsync<ErrorOnValidationException>())
-                .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesException.NAME_EMPTY));
+                .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains(ResourceMessagesException.NAME_EMPTY));
 
             user.Name.Should().NotBe(request.Name);
             user.Email.Should().NotBe(request.Email);
@@ -62,14 +58,14 @@ namespace UsesCases.Test.User.Update
 
             var useCase = CreateUseCase(user, request.Email);
 
-            Func<Task> act = async () => await useCase.Execute(request); 
+            Func<Task> act = async () => await useCase.Execute(request);
 
             (await act.Should().ThrowAsync<ErrorOnValidationException>())
-                .Where(e => e.ErrorMessages.Count == 1 && e.ErrorMessages.Contains(ResourceMessagesException.EMAIL_ALREADY_REGISTERED));
+                .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains(ResourceMessagesException.EMAIL_ALREADY_REGISTERED));
 
         }
 
-        
+
 
         private static UpdateUserUseCase CreateUseCase(MyRecipeBook.Domain.Entities.User user, string? email = null)
         {
@@ -78,7 +74,7 @@ namespace UsesCases.Test.User.Update
             var userUpdateRepository = new UserUpdateOnlyRepositoryBuilder().GetById(user).Build();
 
             var userReadOnlyRepositoryBuilder = new UserReadOnlyRepositoryBuilder();
-            if(string.IsNullOrEmpty(email).IsFalse())
+            if (string.IsNullOrEmpty(email).IsFalse())
             {
                 userReadOnlyRepositoryBuilder.ExistActiveUserWithEmail(email!);
             }

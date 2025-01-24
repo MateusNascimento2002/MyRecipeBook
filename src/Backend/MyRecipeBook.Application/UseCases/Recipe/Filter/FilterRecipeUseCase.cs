@@ -39,7 +39,7 @@ public class FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipe
     private static void Validate(RequestFilterRecipeJson request)
     {
         var validator = new FilterRecipeValidator();
-        
+
         var result = validator.Validate(request);
 
         if (result.IsValid.IsFalse())
