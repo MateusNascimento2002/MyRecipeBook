@@ -7,7 +7,7 @@ namespace WebApi.Test.User.Profile;
 public class GetUserProfileInvalidTokenTest : MyRecipeBookClassFixture
 {
     private readonly string METHOD = "user";
-    public GetUserProfileInvalidTokenTest(CustomWebApplicationFactory factory) : base(factory){}
+    public GetUserProfileInvalidTokenTest(CustomWebApplicationFactory factory) : base(factory) { }
 
     [Fact]
     public async Task Error_Token_Invalid()
@@ -16,7 +16,7 @@ public class GetUserProfileInvalidTokenTest : MyRecipeBookClassFixture
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-    
+
     [Fact]
     public async Task Error_Without_Token()
     {
@@ -24,7 +24,7 @@ public class GetUserProfileInvalidTokenTest : MyRecipeBookClassFixture
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-    
+
     [Fact]
     public async Task Error_Token_With_User_NotFound()
     {

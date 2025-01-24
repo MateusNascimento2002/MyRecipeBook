@@ -1,6 +1,5 @@
 ﻿using CommonTestUtilities.Requests;
 using FluentAssertions;
-using MyRecipeBook.Application.UseCases.User.Register;
 using MyRecipeBook.Application.UseCases.User.Update;
 using MyRecipeBook.Exceptions;
 
@@ -70,5 +69,5 @@ public class UpdateUserValidatorTest
             .And.Contain(e => e.ErrorMessage.Equals(ResourceMessagesException.EMAIL_INVALID));
     }
 
-   
+
 }

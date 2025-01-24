@@ -16,5 +16,5 @@ public class UserUpdateOnlyRepositoryBuilder
         return this;
     }
 
-    public IUserUpdateOnlyRepository Build() => _repository.Object; 
+    public IUserUpdateOnlyRepository Build() => _repository.Object;
 }

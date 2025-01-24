@@ -2,5 +2,5 @@
 
 public interface IPasswordEncripter
 {
-    public string Encrypt(string password); 
+    public string Encrypt(string password);
 }

@@ -1,10 +1,8 @@
 ﻿using CommonTestUtilities.Requests;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 using MyRecipeBook.Exceptions;
 using System.Globalization;
 using System.Net;
-using System.Net.Http.Json;
 using System.Text.Json;
 using WebApi.Test.InlineData;
 
@@ -32,7 +30,7 @@ public class RegisterUserTest : MyRecipeBookClassFixture
         responseData.RootElement.GetProperty("tokens").GetProperty("accessToken").GetString().Should().NotBeNullOrEmpty();
 
     }
-    
+
     [Theory]
     [ClassData(typeof(CultureInlineDataTest))]
     public async Task Error_Empty_Name(string culture)
@@ -45,7 +43,7 @@ public class RegisterUserTest : MyRecipeBookClassFixture
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
         await using var responseBody = await response.Content.ReadAsStreamAsync();
-        
+
         var responseData = await JsonDocument.ParseAsync(responseBody);
 
         var errors = responseData.RootElement.GetProperty("errors").EnumerateArray();

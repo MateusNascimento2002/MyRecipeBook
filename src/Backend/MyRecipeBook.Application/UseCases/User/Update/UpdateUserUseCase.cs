@@ -42,18 +42,18 @@ public class UpdateUserUseCase(ILoggedUser loggedUser,
 
         if (currentEmail.Equals(request.Email).IsFalse())
         {
-            var userExist = await _userReadonlyRepository.ExistActiveUserWithEmail(request.Email); 
+            var userExist = await _userReadonlyRepository.ExistActiveUserWithEmail(request.Email);
             if (userExist)
             {
                 result.Errors.Add(new FluentValidation.Results.ValidationFailure("email", ResourceMessagesException.EMAIL_ALREADY_REGISTERED));
             }
         }
 
-        if (result.IsValid.IsFalse()) 
+        if (result.IsValid.IsFalse())
         {
             var errorMessages = result.Errors.Select(error => error.ErrorMessage).ToList();
             throw new ErrorOnValidationException(errorMessages);
-        }  
+        }
     }
 
 }

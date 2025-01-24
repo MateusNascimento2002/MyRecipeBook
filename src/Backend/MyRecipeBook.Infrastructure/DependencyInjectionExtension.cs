@@ -50,8 +50,9 @@ public static class DependencyInjectionExtension
         services.AddScoped<IUserUpdateOnlyRepository, UserRepository>();
         services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
+        services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
     }
-    
+
     private static void AddLoggedUser(IServiceCollection services)
     {
         services.AddScoped<ILoggedUser, LoggedUser>();
@@ -69,7 +70,7 @@ public static class DependencyInjectionExtension
         });
     }
 
-    private static void AddTokens(IServiceCollection services, IConfiguration configuration) 
+    private static void AddTokens(IServiceCollection services, IConfiguration configuration)
     {
         var expirationTimesMinutes = configuration.GetValue<uint>("Settings:Jwt:ExpirationTimeMinutes");
         var signingKey = configuration.GetValue<string>("Settings:Jwt:SigningKey");
