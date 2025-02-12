@@ -4,13 +4,8 @@ using CommonTestUtilities.Mapper;
 using CommonTestUtilities.Repositories;
 using FluentAssertions;
 using MyRecipeBook.Application.UseCases.Dashboard;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace UsesCases.Test.Dashboard; 
+namespace UsesCases.Test.Dashboard;
 public class GetDashboardUseCaseTest
 {
     [Fact]

@@ -71,4 +71,16 @@ public class RecipeController : MyRecipeBookBaseController
 
         return NoContent();
     }
+
+    [HttpPost("generate")]
+    [ProducesResponseType(typeof(ResponseGeneratedRecipeJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Generate(
+        [FromServices] IGenerateRecipeUseCase useCase,
+        [FromBody] RequestGenerateRecipeJson request)
+    {
+        var response = await useCase.Execute(request);
+
+        return Ok(response);
+    }
 }
