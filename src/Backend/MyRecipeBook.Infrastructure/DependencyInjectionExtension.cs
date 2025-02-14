@@ -8,6 +8,7 @@ using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Domain.Security.Tokens;
 using MyRecipeBook.Domain.Services.LoggedUser;
 using MyRecipeBook.Domain.Services.OpenAI;
+using MyRecipeBook.Domain.ValueObjects;
 using MyRecipeBook.Infrastructure.DataAccess;
 using MyRecipeBook.Infrastructure.DataAccess.Repositories;
 using MyRecipeBook.Infrastructure.Extensions;
@@ -16,6 +17,7 @@ using MyRecipeBook.Infrastructure.Security.Tokens.Access.Generator;
 using MyRecipeBook.Infrastructure.Security.Tokens.Access.Validator;
 using MyRecipeBook.Infrastructure.Services.LoggedUser;
 using MyRecipeBook.Infrastructure.Services.OpenAI;
+using OpenAI.Chat;
 using System.Reflection;
 
 namespace MyRecipeBook.Infrastructure;
@@ -28,6 +30,7 @@ public static class DependencyInjectionExtension
         AddRepositories(services);
         AddLoggedUser(services);
         AddTokens(services, configuration);
+        AddOpenAi(services, configuration);
         if (configuration.IsUnitTestEnviroment())
             return;
 
@@ -53,7 +56,6 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRecipeWriteOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeReadOnlyRepository, RecipeRepository>();
         services.AddScoped<IRecipeUpdateOnlyRepository, RecipeRepository>();
-        services.AddScoped<IGenerateRecipeAI, ChatGptService>();
     }
 
     private static void AddLoggedUser(IServiceCollection services)
@@ -80,6 +82,14 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IAccessTokenGenerator>(option => new JwtTokenGenerator(expirationTimesMinutes, signingKey!));
         services.AddScoped<IAccessTokenValidator>(option => new JwtTokenValidator(signingKey!));
+    }
+    
+    private static void AddOpenAi(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddScoped<IGenerateRecipeAI, ChatGptService>();
+        var apiKey = configuration.GetValue<string>("Settings:OpenAI:ApiKey");
+
+        services.AddScoped(c => new ChatClient(MyRecipeBookRuleConstants.CHAT_MODEL, apiKey));
     }
 
     private static void AddPasswordEncrypter(IServiceCollection services, IConfiguration configuration)
