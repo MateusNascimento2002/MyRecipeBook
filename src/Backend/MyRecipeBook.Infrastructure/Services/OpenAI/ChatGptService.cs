@@ -20,7 +20,7 @@ public class ChatGptService(ChatClient chatClient) : IGenerateRecipeAI
 
         var responseList = completion.Value.Content[0].Text
             .Split("\n")
-            .Where(response => response.Trim().Equals(string.Empty).IsFalse())
+            .Where(response => string.IsNullOrWhiteSpace(response).IsFalse())
             .Select(item => item.Replace("[", "").Replace("]", ""))
             .ToList();
 
