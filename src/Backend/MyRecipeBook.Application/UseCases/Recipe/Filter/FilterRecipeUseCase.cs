@@ -1,24 +1,23 @@
 ﻿using AutoMapper;
+using MyRecipeBook.Application.Extensions;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories.Recipe;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.Storage;
 using MyRecipeBook.Exceptions.ExceptionBase;
 
 namespace MyRecipeBook.Application.UseCases.Recipe.Filter;
 
-public class FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository) : IFilterRecipeUseCase
+public class FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository, IBlobStorageService blobStorageService) : IFilterRecipeUseCase
 {
-    private readonly IMapper _mapper = mapper;
-    private readonly ILoggedUser _loggedUser = loggedUser;
-    private readonly IRecipeReadOnlyRepository _repository = repository;
-
+    
     public async Task<ResponseRecipesJson> Execute(RequestFilterRecipeJson request)
     {
         Validate(request);
 
-        var loggedUser = await _loggedUser.User();
+        var user = await loggedUser.User();
 
         var filters = new Domain.Dtos.FilterRecipesDto()
         {
@@ -28,11 +27,11 @@ public class FilterRecipeUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipe
             DishTypes = request.DishTypes.Distinct().Select(c => (Domain.Enums.DishType)c).ToList(),
         };
 
-        var recipes = await _repository.Filter(loggedUser, filters);
+        var recipes = await repository.Filter(user, filters);
 
-        return new ResponseRecipesJson()
+        return new ResponseRecipesJson
         {
-            Recipes = _mapper.Map<List<ResponseShortRecipeJson>>(recipes)
+            Recipes = await recipes.MapToShortRecipeJson(user, blobStorageService, mapper)
         };
     }
 

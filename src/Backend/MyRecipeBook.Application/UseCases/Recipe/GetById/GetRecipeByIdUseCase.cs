@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using MyRecipeBook.Communication.Responses;
+using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories.Recipe;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.Storage;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionBase;
 
 namespace MyRecipeBook.Application.UseCases.Recipe.GetById;
 
-public class GetRecipeByIdUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository) : IGetRecipeByIdUseCase
+public class GetRecipeByIdUseCase(IMapper mapper, ILoggedUser loggedUser, IRecipeReadOnlyRepository repository, IBlobStorageService blobStorageService) : IGetRecipeByIdUseCase
 {
     private readonly IMapper _mapper = mapper;
     private readonly ILoggedUser _loggedUser = loggedUser;
@@ -25,6 +27,15 @@ public class GetRecipeByIdUseCase(IMapper mapper, ILoggedUser loggedUser, IRecip
             throw new NotFoundException(ResourceMessagesException.RECIPE_NOT_FOUND);
         }
 
-        return _mapper.Map<ResponseRecipeJson>(recipe);
+        var response = _mapper.Map<ResponseRecipeJson>(recipe);
+
+        if (recipe.ImageIdentifier.NotEmpty())
+        {
+            var url = await blobStorageService.GetFileUrl(user, recipe.ImageIdentifier);
+
+            response.ImageUrl = url;
+        }
+
+        return response;
     }
 }

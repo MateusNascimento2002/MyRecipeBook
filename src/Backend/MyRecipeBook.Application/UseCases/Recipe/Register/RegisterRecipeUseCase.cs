@@ -1,28 +1,30 @@
 ﻿using AutoMapper;
+using FileTypeChecker.Extensions;
+using FileTypeChecker.Types;
+using MyRecipeBook.Application.Extensions;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Extensions;
 using MyRecipeBook.Domain.Repositories;
 using MyRecipeBook.Domain.Repositories.Recipe;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.Storage;
+using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionBase;
 
 namespace MyRecipeBook.Application.UseCases.Recipe.Register;
 
-public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILoggedUser loggedUser, IUnitOfWork unitOfWork, IMapper mapper) : IRegisterRecipeUseCase
+public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILoggedUser loggedUser, IUnitOfWork unitOfWork, IMapper mapper, IBlobStorageService blobStorageService) : IRegisterRecipeUseCase
 {
-    private readonly IRecipeWriteOnlyRepository _repository = repository;
     private readonly ILoggedUser _loggedUser = loggedUser;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IMapper _mapper = mapper;
 
-    public async Task<ResponseRegisteredRecipeJson> Execute(RequestRecipeJson request)
+    public async Task<ResponseRegisteredRecipeJson> Execute(RequestRegisterRecipeFormData request)
     {
         Validate(request);
 
         var loggedUser = await _loggedUser.User();
 
-        var recipe = _mapper.Map<Domain.Entities.Recipe>(request);
+        var recipe = mapper.Map<Domain.Entities.Recipe>(request);
         recipe.UserId = loggedUser.Id;
 
         var instructions = request.Instructions.OrderBy(i => i.Step).ToList();
@@ -31,13 +33,29 @@ public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILogge
             instructions[index].Step = index + 1;
         }
 
-        recipe.Instructions = _mapper.Map<IList<Domain.Entities.Instruction>>(instructions);
+        recipe.Instructions = mapper.Map<IList<Domain.Entities.Instruction>>(instructions);
 
-        await _repository.Add(recipe);
+        if(request.Image is not null)
+        {
+            var fileStream  = request.Image.OpenReadStream();
 
-        await _unitOfWork.Commit();
+            (var isValidImage, var extension) = fileStream.ValidateAndGetImageExtension();
 
-        return _mapper.Map<ResponseRegisteredRecipeJson>(recipe);
+            if (isValidImage.IsFalse())
+            {
+                throw new ErrorOnValidationException([ResourceMessagesException.ONLY_IMAGES_ACCEPTED]);
+            }
+
+            recipe.ImageIdentifier = $"{Guid.NewGuid()}{Path.GetExtension(request.Image.FileName)}";
+
+            await blobStorageService.Upload(loggedUser, fileStream, recipe.ImageIdentifier);
+        }
+
+        await repository.Add(recipe);
+
+        await unitOfWork.Commit();
+
+        return mapper.Map<ResponseRegisteredRecipeJson>(recipe);
     }
 
     private static void Validate(RequestRecipeJson request)

@@ -1,34 +1,24 @@
 ﻿using AutoMapper;
+using MyRecipeBook.Application.Extensions;
 using MyRecipeBook.Communication.Responses;
 using MyRecipeBook.Domain.Repositories.Recipe;
 using MyRecipeBook.Domain.Services.LoggedUser;
+using MyRecipeBook.Domain.Services.Storage;
 
 namespace MyRecipeBook.Application.UseCases.Dashboard;
-public class GetDashboardUseCase : IGetDashboardUseCase
+public class GetDashboardUseCase(IRecipeReadOnlyRepository repository, IMapper mapper, ILoggedUser loggedUser, IBlobStorageService blobStorageService) : IGetDashboardUseCase
 {
-    private readonly IRecipeReadOnlyRepository _repository;
-    private readonly IMapper _mapper;
-    private readonly ILoggedUser _loggedUser;
-
-    public GetDashboardUseCase(
-        IRecipeReadOnlyRepository repository,
-        IMapper mapper,
-        ILoggedUser loggedUser)
-    {
-        _repository = repository;
-        _mapper = mapper;
-        _loggedUser = loggedUser;
-    }
+    private readonly ILoggedUser _loggedUser = loggedUser;
 
     public async Task<ResponseRecipesJson> Execute()
     {
         var loggedUser = await _loggedUser.User();
 
-        var recipes = await _repository.GetForDashboard(loggedUser);
+        var recipes = await repository.GetForDashboard(loggedUser);
 
         return new ResponseRecipesJson
         {
-            Recipes = _mapper.Map<IList<ResponseShortRecipeJson>>(recipes),
+            Recipes = await recipes.MapToShortRecipeJson(loggedUser, blobStorageService, mapper)
         };
     }
 }
