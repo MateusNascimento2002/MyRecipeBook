@@ -16,16 +16,14 @@ namespace MyRecipeBook.Application.UseCases.Recipe.Register;
 
 public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILoggedUser loggedUser, IUnitOfWork unitOfWork, IMapper mapper, IBlobStorageService blobStorageService) : IRegisterRecipeUseCase
 {
-    private readonly ILoggedUser _loggedUser = loggedUser;
-
     public async Task<ResponseRegisteredRecipeJson> Execute(RequestRegisterRecipeFormData request)
     {
         Validate(request);
 
-        var loggedUser = await _loggedUser.User();
+        var user = await loggedUser.User();
 
         var recipe = mapper.Map<Domain.Entities.Recipe>(request);
-        recipe.UserId = loggedUser.Id;
+        recipe.UserId = user.Id;
 
         var instructions = request.Instructions.OrderBy(i => i.Step).ToList();
         for (var index = 0; index < instructions.Count; index++)
@@ -48,7 +46,7 @@ public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILogge
 
             recipe.ImageIdentifier = $"{Guid.NewGuid()}{Path.GetExtension(request.Image.FileName)}";
 
-            await blobStorageService.Upload(loggedUser, fileStream, recipe.ImageIdentifier);
+            await blobStorageService.Upload(user, fileStream, recipe.ImageIdentifier);
         }
 
         await repository.Add(recipe);
@@ -58,7 +56,7 @@ public class RegisterRecipeUseCase(IRecipeWriteOnlyRepository repository, ILogge
         return mapper.Map<ResponseRegisteredRecipeJson>(recipe);
     }
 
-    private static void Validate(RequestRecipeJson request)
+    private static void Validate(RequestRegisterRecipeFormData request)
     {
         var result = new RecipeValidator().Validate(request);
 

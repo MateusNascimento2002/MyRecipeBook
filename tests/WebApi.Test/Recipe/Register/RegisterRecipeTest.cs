@@ -25,7 +25,7 @@ namespace WebApi.Test.Recipe.Register
 
             var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
-            var response = await DoPost(method: METHOD, request: request, token: token);
+            var response = await DoPostFormData(method: METHOD, request: request, token: token);
 
             response.StatusCode.Should().Be(HttpStatusCode.Created);
 
@@ -47,7 +47,7 @@ namespace WebApi.Test.Recipe.Register
 
             var token = JwtTokenGeneratorBuilder.Build().Generate(_userIdentifier);
 
-            var response = await DoPost(method: METHOD, request: request, culture: culture, token: token);
+            var response = await DoPostFormData(method: METHOD, request: request, culture: culture, token: token);
 
             response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
 
@@ -67,7 +67,7 @@ namespace WebApi.Test.Recipe.Register
         {
             var request = RequestRecipeJsonBuilder.Build();
 
-            var response = await DoPost(method: METHOD, request: request, token: "TokenInvalid");
+            var response = await DoPostFormData(method: METHOD, request: request, token: "TokenInvalid");
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
@@ -77,7 +77,7 @@ namespace WebApi.Test.Recipe.Register
         {
             var request = RequestRecipeJsonBuilder.Build();
 
-            var response = await DoPost(method: METHOD, request: request, token: string.Empty);
+            var response = await DoPostFormData(method: METHOD, request: request, token: string.Empty);
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
@@ -89,7 +89,7 @@ namespace WebApi.Test.Recipe.Register
 
             var token = JwtTokenGeneratorBuilder.Build().Generate(new Guid());
 
-            var response = await DoPost(method: METHOD, request: request, token: token);
+            var response = await DoPostFormData(method: METHOD, request: request, token: token);
 
             response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
