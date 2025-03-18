@@ -61,8 +61,8 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         (_user, _password) = UserBuilder.Build();
         _recipe = RecipeBuilder.Build(_user);
 
-        dbContext.users.Add(_user);
-        dbContext.recipes.Add(_recipe);
+        dbContext.Users.Add(_user);
+        dbContext.Recipes.Add(_recipe);
 
         dbContext.SaveChanges();
     }

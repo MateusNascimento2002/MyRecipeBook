@@ -11,12 +11,12 @@ public class RecipeRepository(MyRecipeBookDbContext context) : IRecipeWriteOnlyR
 {
     private readonly MyRecipeBookDbContext _context = context;
 
-    public async Task Add(Recipe recipe) => await _context.recipes.AddAsync(recipe);
+    public async Task Add(Recipe recipe) => await _context.Recipes.AddAsync(recipe);
 
     public async Task<IList<Recipe>> Filter(User user, FilterRecipesDto filters)
     {
         var query = _context
-             .recipes
+             .Recipes
              .Include(r => r.Ingredients)
              .AsNoTracking()
              .Where(r => r.Active && r.UserId == user.Id);
@@ -54,26 +54,26 @@ public class RecipeRepository(MyRecipeBookDbContext context) : IRecipeWriteOnlyR
         return await GetFullRecipe().FirstOrDefaultAsync(recipe => recipe.Active && recipe.Id == recipeId && recipe.UserId == user.Id);
     }
 
-    public void Update(Recipe recipe) => _context.recipes.Update(recipe);
+    public void Update(Recipe recipe) => _context.Recipes.Update(recipe);
 
     private IIncludableQueryable<Recipe, IList<DishType>> GetFullRecipe()
     {
         return _context
-           .recipes
+           .Recipes
            .Include(recipe => recipe.Ingredients)
            .Include(recipe => recipe.Instructions)
            .Include(recipe => recipe.DishTypes);
     }
     public async Task Delete(long recipeId)
     {
-        var recipe = await _context.recipes.FindAsync(recipeId);
-        _context.recipes.Remove(recipe!);
+        var recipe = await _context.Recipes.FindAsync(recipeId);
+        _context.Recipes.Remove(recipe!);
     }
 
     public async Task<IList<Recipe>> GetForDashboard(User user)
     {
         return await _context
-            .recipes
+            .Recipes
             .AsNoTracking()
             .Include(recipe => recipe.Ingredients)
             .Where(recipe => recipe.Active && recipe.UserId == user.Id)

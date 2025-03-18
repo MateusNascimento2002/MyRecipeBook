@@ -96,7 +96,6 @@ public class RecipeController : MyRecipeBookBaseController
         IFormFile file)
     {
         await useCase.Execute(id, file);
-
         return NoContent();
     }
 }

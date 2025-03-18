@@ -25,6 +25,6 @@ public class LoggedUser(MyRecipeBookDbContext context, ITokenProvider tokenProvi
 
         Guid userIdentifier = Guid.Parse(identifier);
 
-        return await _context.users.AsNoTracking().FirstAsync(u => u.Active && u.UserIdentifier == userIdentifier);
+        return await _context.Users.AsNoTracking().FirstAsync(u => u.Active && u.UserIdentifier == userIdentifier);
     }
 }
