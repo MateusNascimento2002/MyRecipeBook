@@ -15,9 +15,9 @@ public class UserReadOnlyRepositoryBuilder
         _userReadOnlyRepositoryMock.Setup(repository => repository.ExistActiveUserWithEmail(email)).ReturnsAsync(true);
     }
 
-    public void GetByEmailAndPassword(User user)
+    public void GetByEmail(User user)
     {
-        _userReadOnlyRepositoryMock.Setup(repository => repository.GetByEmailAndPassword(user.Email, user.Password)).ReturnsAsync(user);
+        _userReadOnlyRepositoryMock.Setup(repository => repository.GetByEmail(user.Email)).ReturnsAsync(user);
     }
 
     public IUserReadOnlyRepository Build() => _userReadOnlyRepositoryMock.Object;

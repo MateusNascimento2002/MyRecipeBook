@@ -68,9 +68,6 @@ if (builder.Configuration.IsUnitTestEnviroment().IsFalse())
     AddGoogleAuthentication();
 }
 
-
-builder.Services.AddHostedService<DeleteUserService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

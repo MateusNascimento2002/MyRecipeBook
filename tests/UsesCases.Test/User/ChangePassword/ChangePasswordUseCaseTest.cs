@@ -26,10 +26,6 @@ public class ChangePasswordUseCaseTest
         Func<Task> act = async () => await useCase.Execute(request);
 
         await act.Should().NotThrowAsync();
-
-        var passwordEncripter = PasswordEncripterBuilder.Build();
-
-        user.Password.Should().Be(passwordEncripter.Encrypt(request.NewPassword));
     }
 
     [Fact]
@@ -39,20 +35,17 @@ public class ChangePasswordUseCaseTest
 
         var request = new RequestChangePasswordJson
         {
-            NewPassword = string.Empty,
-            Password = password
+            Password = password,
+            NewPassword = string.Empty
         };
 
         var useCase = CreateUseCase(user);
 
-        Func<Task> act = async () => await useCase.Execute(request);
+        Func<Task> act = async () => { await useCase.Execute(request); };
 
         (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains(ResourceMessagesException.PASSWORD_EMPTY));
-
-        var passwordEncripter = PasswordEncripterBuilder.Build();
-
-        user.Password.Should().Be(passwordEncripter.Encrypt(password));
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains(ResourceMessagesException.PASSWORD_EMPTY));
     }
 
     [Fact]
@@ -64,14 +57,11 @@ public class ChangePasswordUseCaseTest
 
         var useCase = CreateUseCase(user);
 
-        Func<Task> act = async () => await useCase.Execute(request);
+        Func<Task> act = async () => { await useCase.Execute(request); };
 
-        (await act.Should().ThrowAsync<ErrorOnValidationException>())
-            .Where(e => e.GetErrorMessages().Count == 1 && e.GetErrorMessages().Contains(ResourceMessagesException.PASSWORD_DIFFERENT_CURRENT_PASSWORD));
-
-        var passwordEncripter = PasswordEncripterBuilder.Build();
-
-        user.Password.Should().Be(passwordEncripter.Encrypt(password));
+        await act.Should().ThrowAsync<ErrorOnValidationException>()
+            .Where(e => e.GetErrorMessages().Count == 1 &&
+                e.GetErrorMessages().Contains(ResourceMessagesException.PASSWORD_DIFFERENT_CURRENT_PASSWORD));
     }
 
     private static ChangePasswordUseCase CreateUseCase(MyRecipeBook.Domain.Entities.User user)

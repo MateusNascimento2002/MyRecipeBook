@@ -33,7 +33,7 @@ public static class DependencyInjectionExtension
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        AddPasswordEncrypter(services, configuration);
+        AddPasswordEncrypter(services);
         AddRepositories(services);
         AddLoggedUser(services);
         AddTokens(services, configuration);
@@ -112,11 +112,9 @@ public static class DependencyInjectionExtension
         }
     }
 
-    private static void AddPasswordEncrypter(IServiceCollection services, IConfiguration configuration)
+    private static void AddPasswordEncrypter(IServiceCollection services)
     {
-        string additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey")!;
-
-        services.AddScoped<IPasswordEncripter>(option => new Sha512Encripter(additionalKey!));
+        services.AddScoped<IPasswordEncripter, BCryptNet>();
     }
 
     private static void AddQueue(IServiceCollection services, IConfiguration configuration)

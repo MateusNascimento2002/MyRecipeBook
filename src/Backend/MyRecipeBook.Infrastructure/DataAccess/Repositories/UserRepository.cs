@@ -8,20 +8,9 @@ namespace MyRecipeBook.Infrastructure.DataAccess.Repositories;
 public class UserRepository : IUserReadOnlyRepository, IUserWriteOnlyRepository, IUserUpdateOnlyRepository, IUserDeleteOnlyRepository
 {
     private readonly MyRecipeBookDbContext _context;
-
     public UserRepository(MyRecipeBookDbContext context) => _context = context;
-
     public async Task Add(User user) => await _context.Users.AddAsync(user);
     public async Task<bool> ExistActiveUserWithEmail(string email) => await _context.Users.AnyAsync(u => u.Email.Equals(email) && u.Active);
-
-    public async Task<User?> GetByEmailAndPassword(string email, string password)
-    {
-        return await _context.
-                     Users
-                     .AsNoTracking()
-                     .FirstOrDefaultAsync(u => u.Email.Equals(email) && u.Password.Equals(password) && u.Active);
-    }
-
     public async Task<bool> ExistActiveUserWithIdentifier(Guid userIdentifier) => await _context.Users.AnyAsync(u => u.UserIdentifier.Equals(userIdentifier) && u.Active);
     public async Task<User> GetByUserIdentifier(Guid userIdentifier) => await _context.Users.AsNoTracking().FirstAsync(u => u.UserIdentifier.Equals(userIdentifier));
     public async Task<User> GetById(long id) => await _context.Users.FirstOrDefaultAsync(u => u.Id == id) ?? throw new NotFoundException("User not found!");

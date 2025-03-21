@@ -30,7 +30,6 @@ public class RegisterUserUseCase(
         await Validate(request);
         var user = _mapper.Map<Domain.Entities.User>(request);
         user.Password = _passwordEncrypter.Encrypt(request.Password);
-        user.UserIdentifier = Guid.NewGuid();
         await _writeOnlyRepository.Add(user);
         await _unitOfWork.Commit();
         return new ResponseRegisteredUserJson()
