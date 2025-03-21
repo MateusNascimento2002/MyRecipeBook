@@ -1,53 +1,72 @@
 ﻿using AutoMapper;
 using MyRecipeBook.Communication.Requests;
 using MyRecipeBook.Communication.Responses;
+using MyRecipeBook.Domain.Entities;
 using MyRecipeBook.Domain.Repositories;
+using MyRecipeBook.Domain.Repositories.Token;
 using MyRecipeBook.Domain.Repositories.User;
 using MyRecipeBook.Domain.Security.Tokens;
+using MyRecipeBook.Domain.Security.Tokens.Refresh;
 using MyRecipeBook.Exceptions;
 using MyRecipeBook.Exceptions.ExceptionBase;
 using MyRecipeBook.Infrastructure.Security.Cryptography;
 
 namespace MyRecipeBook.Application.UseCases.User.Register;
 
-public class RegisterUserUseCase(
-    IUserWriteOnlyRepository userWriteOnlyRepository,
-    IUserReadOnlyRepository userReadOnlyRepository,
-    IMapper mapper,
-    IPasswordEncripter passwordEncrypter,
-    IAccessTokenGenerator accessTokenGenerator,
-    IUnitOfWork unitOfWork) : IRegisterUserUseCase
+public class RegisterUserUseCase(IUserWriteOnlyRepository writeOnlyRepository,
+                                IUserReadOnlyRepository readOnlyRepository,
+                                IMapper mapper,
+                                IPasswordEncripter passwordEncrypter,
+                                IUnitOfWork unitOfWork,
+                                IAccessTokenGenerator accessTokenGenerator,
+                                IRefreshTokenGenerator refreshTokenGenerator,
+                                ITokenRepository tokenRepository) : IRegisterUserUseCase
 {
-    private readonly IUserWriteOnlyRepository _writeOnlyRepository = userWriteOnlyRepository;
-    private readonly IUserReadOnlyRepository _readOnlyRepository = userReadOnlyRepository;
-    private readonly IMapper _mapper = mapper;
-    private readonly IPasswordEncripter _passwordEncrypter = passwordEncrypter;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
-    private readonly IAccessTokenGenerator _accessTokenGenerator = accessTokenGenerator;
-
     public async Task<ResponseRegisteredUserJson> Execute(RequestRegisterUserJson request)
     {
         await Validate(request);
-        var user = _mapper.Map<Domain.Entities.User>(request);
-        user.Password = _passwordEncrypter.Encrypt(request.Password);
-        await _writeOnlyRepository.Add(user);
-        await _unitOfWork.Commit();
+
+        var user = mapper.Map<Domain.Entities.User>(request);
+
+        user.Password = passwordEncrypter.Encrypt(request.Password);
+
+        await writeOnlyRepository.Add(user);
+
+        await unitOfWork.Commit();
+
+        var refreshToken = await CreateAndSaveRefreshToken(user);
+
         return new ResponseRegisteredUserJson()
         {
             Name = user.Name,
             Tokens = new ResponseTokensJson()
             {
-                AccessToken = _accessTokenGenerator.Generate(user.UserIdentifier)
+                AccessToken = accessTokenGenerator.Generate(user.UserIdentifier),
+                RefreshToken = refreshToken
             }
         };
     }
 
+    private async Task<string> CreateAndSaveRefreshToken(Domain.Entities.User user)
+    {
+        var refreshToken = refreshTokenGenerator.Generate();
+
+        await tokenRepository.SaveNewRefreshToken(new RefreshToken
+        {
+            Value = refreshToken,
+            UserId = user.Id
+        });
+
+        await unitOfWork.Commit();
+
+        return refreshToken;
+    }
     private async Task Validate(RequestRegisterUserJson request)
     {
         var validator = new RegisterUserValidator();
         var result = validator.Validate(request);
 
-        var exist = await _readOnlyRepository.ExistActiveUserWithEmail(request.Email);
+        var exist = await readOnlyRepository.ExistActiveUserWithEmail(request.Email);
         if (exist)
         {
             result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, ResourceMessagesException.EMAIL_ALREADY_REGISTERED));
