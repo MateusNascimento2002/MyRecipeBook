@@ -93,9 +93,13 @@ void MigrateDatabase()
 {
     if (builder.Configuration.IsUnitTestEnviroment())
         return;
+
+    var databaseType = builder.Configuration.DatabaseType();
     var connectionString = builder.Configuration.ConnectionString();
-    var serviceProvider = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope().ServiceProvider;
-    DatabaseMigration.Migrate(connectionString, serviceProvider);
+
+    var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+
+    DatabaseMigration.Migrate(databaseType, connectionString, serviceScope.ServiceProvider);
 }
 
 void AddGoogleAuthentication()
