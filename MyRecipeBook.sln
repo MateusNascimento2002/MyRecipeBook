@@ -11,17 +11,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{52EF
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{C07C7BAE-41A3-4E54-93AD-71F530803229}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipeBook.API", "src\Backend\MyRecipeBook.API\MyRecipeBook.API.csproj", "{231E4ADF-7C17-4973-BD8E-F89C01569438}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRecipeBook.API", "src\Backend\MyRecipeBook.API\MyRecipeBook.API.csproj", "{231E4ADF-7C17-4973-BD8E-F89C01569438}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipeBook.Application", "src\Backend\MyRecipeBook.Application\MyRecipeBook.Application.csproj", "{32C862A2-C90D-4FC3-BF93-7865667C02BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRecipeBook.Application", "src\Backend\MyRecipeBook.Application\MyRecipeBook.Application.csproj", "{32C862A2-C90D-4FC3-BF93-7865667C02BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipeBook.Domain", "src\Backend\MyRecipeBook.Domain\MyRecipeBook.Domain.csproj", "{E701EE19-5069-444A-BB82-6125104CB0AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRecipeBook.Domain", "src\Backend\MyRecipeBook.Domain\MyRecipeBook.Domain.csproj", "{E701EE19-5069-444A-BB82-6125104CB0AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipeBook.Infrastructure", "src\Backend\MyRecipeBook.Infrastructure\MyRecipeBook.Infrastructure.csproj", "{6B1E1DE2-75AF-4876-B328-C889397B9B9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRecipeBook.Infrastructure", "src\Backend\MyRecipeBook.Infrastructure\MyRecipeBook.Infrastructure.csproj", "{6B1E1DE2-75AF-4876-B328-C889397B9B9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipeBook.Communication", "src\Shared\MyRecipeBook.Communication\MyRecipeBook.Communication.csproj", "{DCA104FE-FE33-4CB5-94ED-07BA94431BD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRecipeBook.Communication", "src\Shared\MyRecipeBook.Communication\MyRecipeBook.Communication.csproj", "{DCA104FE-FE33-4CB5-94ED-07BA94431BD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyRecipeBook.Exceptions", "src\Shared\MyRecipeBook.Exceptions\MyRecipeBook.Exceptions.csproj", "{E757E74D-4C11-4A41-996C-4BAFDCC55D75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyRecipeBook.Exceptions", "src\Shared\MyRecipeBook.Exceptions\MyRecipeBook.Exceptions.csproj", "{E757E74D-4C11-4A41-996C-4BAFDCC55D75}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Validators.Test", "tests\Validators.Test\Validators.Test.csproj", "{B826F60D-2579-4147-B66E-CB7C437E7510}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTestUtilities", "tests\CommonTestUtilities\CommonTestUtilities.csproj", "{FE834E19-222B-4F4F-915B-6ADA89612E6A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsesCases.Test", "tests\UsesCases.Test\UsesCases.Test.csproj", "{0E0A0BA5-64B5-4F52-888D-C19DAC85A17C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi.Test", "tests\WebApi.Test\WebApi.Test.csproj", "{F51F787B-DC92-4741-AECD-C1BDEB28197E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,6 +61,22 @@ Global
 		{E757E74D-4C11-4A41-996C-4BAFDCC55D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E757E74D-4C11-4A41-996C-4BAFDCC55D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E757E74D-4C11-4A41-996C-4BAFDCC55D75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B826F60D-2579-4147-B66E-CB7C437E7510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B826F60D-2579-4147-B66E-CB7C437E7510}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B826F60D-2579-4147-B66E-CB7C437E7510}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B826F60D-2579-4147-B66E-CB7C437E7510}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE834E19-222B-4F4F-915B-6ADA89612E6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE834E19-222B-4F4F-915B-6ADA89612E6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE834E19-222B-4F4F-915B-6ADA89612E6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE834E19-222B-4F4F-915B-6ADA89612E6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E0A0BA5-64B5-4F52-888D-C19DAC85A17C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E0A0BA5-64B5-4F52-888D-C19DAC85A17C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E0A0BA5-64B5-4F52-888D-C19DAC85A17C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E0A0BA5-64B5-4F52-888D-C19DAC85A17C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F51F787B-DC92-4741-AECD-C1BDEB28197E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F51F787B-DC92-4741-AECD-C1BDEB28197E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F51F787B-DC92-4741-AECD-C1BDEB28197E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F51F787B-DC92-4741-AECD-C1BDEB28197E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +90,10 @@ Global
 		{6B1E1DE2-75AF-4876-B328-C889397B9B9C} = {52EFA744-9CB0-4B21-A6F2-A16AA0580E77}
 		{DCA104FE-FE33-4CB5-94ED-07BA94431BD4} = {C07C7BAE-41A3-4E54-93AD-71F530803229}
 		{E757E74D-4C11-4A41-996C-4BAFDCC55D75} = {C07C7BAE-41A3-4E54-93AD-71F530803229}
+		{B826F60D-2579-4147-B66E-CB7C437E7510} = {FE1293A7-7CE3-46D1-9219-145BD6619D9C}
+		{FE834E19-222B-4F4F-915B-6ADA89612E6A} = {FE1293A7-7CE3-46D1-9219-145BD6619D9C}
+		{0E0A0BA5-64B5-4F52-888D-C19DAC85A17C} = {FE1293A7-7CE3-46D1-9219-145BD6619D9C}
+		{F51F787B-DC92-4741-AECD-C1BDEB28197E} = {FE1293A7-7CE3-46D1-9219-145BD6619D9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7C64BD1D-B417-4E60-A650-63BF3BD408AF}
